@@ -1,0 +1,16 @@
+# =============================================================================
+# Estudio Estadístico de la Demanda Turística Emisiva Uruguaya
+# Probabilidad y Estadística Aplicada — Facultad de Ingeniería y Tecnologías
+#
+# Dependencias del proyecto
+#
+# Instalación (desde la raíz del proyecto, con el entorno virtual activado):
+#   Windows : venv\Scripts\activate  →  pip install -r requirements.txt
+#   Linux/Mac: source venv/bin/activate → pip install -r requirements.txt
+# =============================================================================
+
+pandas==2.2.2          # Manipulación y análisis de datos tabulares
+numpy==1.26.4          # Operaciones numéricas y matemáticas
+matplotlib==3.9.0      # Generación de gráficos y visualizaciones
+scipy==1.13.1          # Tests estadísticos (t-test, chi-cuadrado, etc.)
+scikit-learn==1.5.0    # Regresión lineal y métricas de ajuste

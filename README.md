@@ -25,31 +25,11 @@ Tarea2/
 │   └── parte3_inferencia.py      # Inferencia estadística
 ├── resultados/                   # Se crea automáticamente; aquí se guardan los gráficos
 ├── requirements.txt              # Dependencias del proyecto
-├── run_all.py                    # Script para ejecutar todo con un solo comando
 └── README.md                     # Este archivo
 ```
 
 ---
 
-## 🚀 Ejecución rápida (un solo comando)
-
-Para facilitar la ejecución, hemos creado un script llamado `run_all.py` que ejecuta secuencialmente las tres partes del análisis. **Solo necesitas abrir una terminal en la carpeta raíz del proyecto y ejecutar:**
-
-```bash
-python run_all.py
-```
-
-Este comando:
-
-1. Activa automáticamente el entorno virtual (si existe) o instala las dependencias necesarias.
-2. Ejecuta `parte1_muestreo.py` (genera la muestra).
-3. Ejecuta `parte2_descriptiva.py` (genera tablas y gráficos descriptivos).
-4. Ejecuta `parte3_inferencia.py` (genera intervalos, tests y regresión).
-5. Muestra un resumen final con la ubicación de los resultados.
-
-> **Nota:** Asegúrate de tener el archivo `emisivo.csv` en la carpeta `datos/` antes de ejecutar. Si no lo tienes, descárgalo desde el [Catálogo de Datos Abiertos](https://catalogodatos.gub.uy/dataset/ministerio-de-turismo-turismo-emisivo).
-
----
 
 ## 📋 Paso a paso para ejecutar manualmente (para profesores y revisores)
 

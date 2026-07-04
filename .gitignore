@@ -1,0 +1,82 @@
+# =============================================================================
+# .gitignore — Tarea 2 Probabilidad y Estadística Aplicada
+# =============================================================================
+
+# ── Entorno virtual ───────────────────────────────────────────────────────────
+# El venv se genera localmente con: python -m venv venv
+# No se sube porque puede pesar +300 MB y es reproducible con requirements.txt
+venv/
+.venv/
+env/
+.env/
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+.Python
+
+# ── Jupyter (por si se agrega después) ───────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ── Datos pesados (opcionales según decisión del equipo) ─────────────────────
+# Descomentar si no se quiere subir el CSV original (pesa ~10 MB):
+# datos/emisivo.csv
+#
+# La muestra sí se puede subir (100 KB) para que el revisor no tenga que
+# ejecutar la Parte 1. Si se prefiere que la genere, descomentar:
+# datos/muestra_2000.csv
+
+# ── Sistemas operativos ───────────────────────────────────────────────────────
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# ── Editores e IDEs ───────────────────────────────────────────────────────────
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm / JetBrains
+.idea/
+*.iml
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim / Emacs
+*.swp
+*.swo
+*~
+\#*\#
+.#*
+
+# ── Archivos temporales y de compilación ─────────────────────────────────────
+*.log
+*.tmp
+*.bak
+*.orig
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# ── Cobertura de tests (por si se agrega después) ────────────────────────────
+.coverage
+htmlcov/
+.pytest_cache/

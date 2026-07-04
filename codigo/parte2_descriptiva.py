@@ -32,28 +32,30 @@
 # =============================================================================
 
 # --- Importación de librerías ------------------------------------------------
-import pandas as pd          # Manipulación de datos tabulares
-import numpy as np           # Operaciones numéricas y matemáticas
+import pandas as pd  # Manipulación de datos tabulares
+import numpy as np  # Operaciones numéricas y matemáticas
 import matplotlib.pyplot as plt  # Generación de gráficos
 import matplotlib.ticker as mticker
-import os                    # Manejo de rutas y carpetas
+import os  # Manejo de rutas y carpetas
 
 # --- Configuración general ---------------------------------------------------
 
-RUTA_MUESTRA    = os.path.join("datos", "muestra_2000.csv")
-RUTA_RESULTADOS = "resultados"   # Carpeta donde se guardan los gráficos
-VAR_GASTO       = "GastoAlojamiento"  # Variable de gasto seleccionada
+RUTA_MUESTRA = os.path.join("datos", "muestra_2000.csv")
+RUTA_RESULTADOS = "resultados"  # Carpeta donde se guardan los gráficos
+VAR_GASTO = "GastoAlojamiento"  # Variable de gasto seleccionada
 
 # Crear carpeta de resultados si no existe
 os.makedirs(RUTA_RESULTADOS, exist_ok=True)
 
 # Estilo visual uniforme para todos los gráficos
-plt.rcParams.update({
-    "figure.dpi": 150,
-    "font.family": "sans-serif",
-    "axes.titlesize": 13,
-    "axes.labelsize": 11,
-})
+plt.rcParams.update(
+    {
+        "figure.dpi": 150,
+        "font.family": "sans-serif",
+        "axes.titlesize": 13,
+        "axes.labelsize": 11,
+    }
+)
 
 print("=" * 65)
 print("PARTE 2 - Estadística Descriptiva — Turismo Emisivo Uruguay")
@@ -74,23 +76,29 @@ print("─" * 65)
 
 # Contamos cuántas veces aparece cada categoría de Destino.
 # value_counts() devuelve los conteos en orden descendente.
-frec_abs = df["Destino"].value_counts()           # Frecuencia absoluta (fi)
-total    = frec_abs.sum()                          # Total de observaciones (n)
-frec_rel = (frec_abs / total * 100).round(2)       # Frecuencia relativa en %
+frec_abs = df["Destino"].value_counts()  # Frecuencia absoluta (fi)
+total = frec_abs.sum()  # Total de observaciones (n)
+frec_rel = (frec_abs / total * 100).round(2)  # Frecuencia relativa en %
 
 # Construimos la tabla final uniendo ambas series en un DataFrame
-tabla_destino = pd.DataFrame({
-    "Destino"              : frec_abs.index,
-    "Frec. Absoluta (fi)"  : frec_abs.values,
-    "Frec. Relativa (%)"   : frec_rel.values,
-})
+tabla_destino = pd.DataFrame(
+    {
+        "Destino": frec_abs.index,
+        "Frec. Absoluta (fi)": frec_abs.values,
+        "Frec. Relativa (%)": frec_rel.values,
+    }
+)
 
 # Añadimos fila de totales
-total_row = pd.DataFrame([{
-    "Destino"             : "TOTAL",
-    "Frec. Absoluta (fi)" : total,
-    "Frec. Relativa (%)"  : 100.00,
-}])
+total_row = pd.DataFrame(
+    [
+        {
+            "Destino": "TOTAL",
+            "Frec. Absoluta (fi)": total,
+            "Frec. Relativa (%)": 100.00,
+        }
+    ]
+)
 tabla_destino = pd.concat([tabla_destino, total_row], ignore_index=True)
 
 print("\nTabla de frecuencias — Variable: Destino")
@@ -111,7 +119,9 @@ datos_graf = datos_graf.sort_values("Frec. Absoluta (fi)", ascending=False)
 fig, axes = plt.subplots(1, 2, figsize=(14, 6))
 fig.suptitle(
     "Distribución de viajes por Destino\n(Muestra n = 2,000 — Turismo Emisivo Uruguay)",
-    fontsize=13, fontweight="bold", y=1.01
+    fontsize=13,
+    fontweight="bold",
+    y=1.01,
 )
 
 # ---- Gráfico de barras ----
@@ -119,9 +129,9 @@ colores = plt.cm.tab10.colors
 axes[0].bar(
     datos_graf["Destino"],
     datos_graf["Frec. Absoluta (fi)"],
-    color=colores[:len(datos_graf)],
+    color=colores[: len(datos_graf)],
     edgecolor="white",
-    width=0.7
+    width=0.7,
 )
 axes[0].set_title("Gráfico de Barras", fontweight="bold")
 axes[0].set_xlabel("Destino")
@@ -133,22 +143,28 @@ for bar in axes[0].patches:
         bar.get_x() + bar.get_width() / 2,
         bar.get_height() + 10,
         str(int(bar.get_height())),
-        ha="center", va="bottom", fontsize=9
+        ha="center",
+        va="bottom",
+        fontsize=9,
     )
 axes[0].set_ylim(0, datos_graf["Frec. Absoluta (fi)"].max() * 1.15)
 
 # ---- Gráfico circular (pie chart) ----
 # Agrupamos categorías con < 1% en "Otros" para mejorar la legibilidad
-umbral   = 1.0   # porcentaje mínimo para aparecer por separado
-mayores  = datos_graf[datos_graf["Frec. Relativa (%)"] >= umbral]
-menores  = datos_graf[datos_graf["Frec. Relativa (%)"] <  umbral]
+umbral = 1.0  # porcentaje mínimo para aparecer por separado
+mayores = datos_graf[datos_graf["Frec. Relativa (%)"] >= umbral]
+menores = datos_graf[datos_graf["Frec. Relativa (%)"] < umbral]
 
 if not menores.empty:
-    otros_fila = pd.DataFrame([{
-        "Destino"              : "Otros",
-        "Frec. Absoluta (fi)"  : menores["Frec. Absoluta (fi)"].sum(),
-        "Frec. Relativa (%)"   : menores["Frec. Relativa (%)"].sum(),
-    }])
+    otros_fila = pd.DataFrame(
+        [
+            {
+                "Destino": "Otros",
+                "Frec. Absoluta (fi)": menores["Frec. Absoluta (fi)"].sum(),
+                "Frec. Relativa (%)": menores["Frec. Relativa (%)"].sum(),
+            }
+        ]
+    )
     pie_data = pd.concat([mayores, otros_fila], ignore_index=True)
 else:
     pie_data = mayores.copy()
@@ -158,8 +174,8 @@ wedges, texts, autotexts = axes[1].pie(
     labels=pie_data["Destino"],
     autopct="%1.1f%%",
     startangle=140,
-    colors=colores[:len(pie_data)],
-    pctdistance=0.75
+    colors=colores[: len(pie_data)],
+    pctdistance=0.75,
 )
 for t in autotexts:
     t.set_fontsize(8)
@@ -185,44 +201,50 @@ serie_gasto = df[VAR_GASTO]
 # k = 1 + log2(n), donde n es el tamaño de la muestra.
 # Esta regla es ampliamente utilizada en estadística descriptiva.
 n_obs = len(serie_gasto)
-k     = int(np.ceil(1 + np.log2(n_obs)))   # Número de clases/intervalos
+k = int(np.ceil(1 + np.log2(n_obs)))  # Número de clases/intervalos
 
 # Calculamos el ancho de cada intervalo y lo redondeamos a un número limpio
-rango       = serie_gasto.max() - serie_gasto.min()
+rango = serie_gasto.max() - serie_gasto.min()
 ancho_exacto = rango / k
-ancho        = np.ceil(ancho_exacto / 100) * 100   # Redondeo al 100 superior
+ancho = np.ceil(ancho_exacto / 100) * 100  # Redondeo al 100 superior
 
 # Definimos los límites de los intervalos
-lim_inf = serie_gasto.min()          # Límite inferior del primer intervalo
-lim_sup = lim_inf + k * ancho        # Límite superior del último intervalo
-bins    = np.arange(lim_inf, lim_sup + ancho, ancho)
+lim_inf = serie_gasto.min()  # Límite inferior del primer intervalo
+lim_sup = lim_inf + k * ancho  # Límite superior del último intervalo
+bins = np.arange(lim_inf, lim_sup + ancho, ancho)
 
 # pd.cut() asigna cada observación al intervalo correspondiente.
 # right=False → los intervalos son del tipo [a, b), cerrado a la izquierda.
 categorias = pd.cut(serie_gasto, bins=bins, right=False, include_lowest=True)
 
 # Calculamos frecuencias
-fi    = categorias.value_counts(sort=False)   # Frecuencias absolutas
-n     = fi.sum()                              # Total
-fri   = (fi / n).round(6)                    # Frecuencias relativas
-Fri   = fri.cumsum().round(6)                 # Frecuencias relativas acumuladas
+fi = categorias.value_counts(sort=False)  # Frecuencias absolutas
+n = fi.sum()  # Total
+fri = (fi / n).round(6)  # Frecuencias relativas
+Fri = fri.cumsum().round(6)  # Frecuencias relativas acumuladas
 marca = [(iv.left + iv.right) / 2 for iv in fi.index]  # Marca de clase
 
-tabla_gasto = pd.DataFrame({
-    "Intervalo"                   : [str(iv) for iv in fi.index],
-    "Marca de clase"              : [round(m, 2) for m in marca],
-    "Frec. Absoluta (fi)"         : fi.values,
-    "Frec. Relativa (fri)"        : fri.values.round(4),
-    "Frec. Rel. Acumulada (Fri)"  : Fri.values.round(4),
-})
+tabla_gasto = pd.DataFrame(
+    {
+        "Intervalo": [str(iv) for iv in fi.index],
+        "Marca de clase": [round(m, 2) for m in marca],
+        "Frec. Absoluta (fi)": fi.values,
+        "Frec. Relativa (fri)": fri.values.round(4),
+        "Frec. Rel. Acumulada (Fri)": Fri.values.round(4),
+    }
+)
 
-total_row2 = pd.DataFrame([{
-    "Intervalo"                  : "TOTAL",
-    "Marca de clase"             : "—",
-    "Frec. Absoluta (fi)"        : n,
-    "Frec. Relativa (fri)"       : round(fri.sum(), 4),
-    "Frec. Rel. Acumulada (Fri)" : "—",
-}])
+total_row2 = pd.DataFrame(
+    [
+        {
+            "Intervalo": "TOTAL",
+            "Marca de clase": "—",
+            "Frec. Absoluta (fi)": n,
+            "Frec. Relativa (fri)": round(fri.sum(), 4),
+            "Frec. Rel. Acumulada (Fri)": "—",
+        }
+    ]
+)
 tabla_gasto = pd.concat([tabla_gasto, total_row2], ignore_index=True)
 
 print(f"\nTabla de frecuencias por intervalos — Variable: {VAR_GASTO}")
@@ -243,24 +265,30 @@ fig, ax = plt.subplots(figsize=(10, 5))
 # El histograma usa los mismos bins definidos para la tabla de frecuencias,
 # garantizando coherencia entre la tabla y el gráfico.
 n_hist, bins_hist, patches = ax.hist(
-    serie_gasto,
-    bins=bins,
-    edgecolor="white",
-    color="#2c7bb6",
-    linewidth=0.8
+    serie_gasto, bins=bins, edgecolor="white", color="#2c7bb6", linewidth=0.8
 )
 
 # Línea de la media y mediana para referencia visual de asimetría
-media   = serie_gasto.mean()
+media = serie_gasto.mean()
 mediana = serie_gasto.median()
-ax.axvline(media,   color="#d7191c", linestyle="--", linewidth=1.5,
-           label=f"Media = {media:.2f} USD")
-ax.axvline(mediana, color="#1a9641", linestyle="-",  linewidth=1.5,
-           label=f"Mediana = {mediana:.2f} USD")
+ax.axvline(
+    media,
+    color="#d7191c",
+    linestyle="--",
+    linewidth=1.5,
+    label=f"Media = {media:.2f} USD",
+)
+ax.axvline(
+    mediana,
+    color="#1a9641",
+    linestyle="-",
+    linewidth=1.5,
+    label=f"Mediana = {mediana:.2f} USD",
+)
 
 ax.set_title(
     f"Histograma — {VAR_GASTO}\n(Muestra n = {n_obs:,} — Turismo Emisivo Uruguay)",
-    fontweight="bold"
+    fontweight="bold",
 )
 ax.set_xlabel("Gasto en Alojamiento (USD)")
 ax.set_ylabel("Frecuencia Absoluta")
@@ -287,16 +315,16 @@ print("─" * 65)
 
 # Calculamos las medidas de posición manualmente para incluirlas en el informe.
 # Los cuartiles dividen la distribución en cuatro partes iguales.
-Q1  = serie_gasto.quantile(0.25)   # Primer cuartil  (percentil 25)
-Q2  = serie_gasto.quantile(0.50)   # Mediana          (percentil 50)
-Q3  = serie_gasto.quantile(0.75)   # Tercer cuartil  (percentil 75)
-IQR = Q3 - Q1                      # Rango intercuartílico
+Q1 = serie_gasto.quantile(0.25)  # Primer cuartil  (percentil 25)
+Q2 = serie_gasto.quantile(0.50)  # Mediana          (percentil 50)
+Q3 = serie_gasto.quantile(0.75)  # Tercer cuartil  (percentil 75)
+IQR = Q3 - Q1  # Rango intercuartílico
 
 # Límites para detectar datos atípicos (outliers) usando el criterio de Tukey:
 # Son atípicos los valores que caen fuera del rango [Q1 - 1.5·IQR, Q3 + 1.5·IQR]
 lim_inf_out = Q1 - 1.5 * IQR
 lim_sup_out = Q3 + 1.5 * IQR
-outliers    = serie_gasto[(serie_gasto < lim_inf_out) | (serie_gasto > lim_sup_out)]
+outliers = serie_gasto[(serie_gasto < lim_inf_out) | (serie_gasto > lim_sup_out)]
 
 print(f"\n  Medidas de posición — {VAR_GASTO}:")
 print(f"    Q1  (primer cuartil)   = {Q1:.2f} USD")
@@ -325,78 +353,89 @@ print(f"  Por lo tanto Q1 = $0 es matemáticamente correcto.")
 #   Panel izquierdo: vista completa (escala real) para mostrar los outliers.
 #   Panel derecho: zoom a [0, lim_sup_out] para leer claramente Q1, Q2, Q3.
 
-fig, axes = plt.subplots(1, 2, figsize=(13, 6),
-                          gridspec_kw={"width_ratios": [1, 1.6]})
-fig.suptitle(
-    f"Diagrama de Cajas — {VAR_GASTO}\n(Muestra n = {n_obs:,} — Turismo Emisivo Uruguay)",
-    fontweight="bold", fontsize=12
-)
+# Panel único con zoom a la zona intercuartílica [0, bigote superior].
+# Se descarta la vista de escala completa porque comprime la caja y
+# dificulta la lectura de Q1, Q2 y Q3. Los 110 outliers se documentan
+# en el texto del informe y en la etiqueta del bigote.
+fig, ax = plt.subplots(figsize=(10, 6))
 
-BP_STYLE = dict(
+ax.boxplot(
+    serie_gasto,
+    vert=True,
     patch_artist=True,
-    widths=0.5,
+    widths=0.45,
     boxprops=dict(facecolor="#aec6cf", color="#2c7bb6", linewidth=1.5),
     medianprops=dict(color="#d7191c", linewidth=2.5),
     whiskerprops=dict(color="#2c7bb6", linewidth=1.5),
     capprops=dict(color="#2c7bb6", linewidth=2),
-    flierprops=dict(marker="o", markerfacecolor="#fdae61",
-                    markersize=3, linestyle="none", alpha=0.4),
+    flierprops=dict(
+        marker="o", markerfacecolor="#fdae61", markersize=3, linestyle="none", alpha=0.4
+    ),
 )
 
-# ── Panel izquierdo: escala completa ──────────────────────────────────────
-ax0 = axes[0]
-ax0.boxplot(serie_gasto, vert=True, **BP_STYLE)
-ax0.set_title("Escala completa", fontsize=10, pad=4)
-ax0.set_ylabel("Gasto en Alojamiento (USD)")
-ax0.set_xticks([])
-ax0.yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f"${x:,.0f}"))
+# Limitar el eje Y para mostrar solo la zona de la caja y el bigote
+ax.set_ylim(-50, lim_sup_out + 100)
 
-# Anotaciones en panel izquierdo
-for val, lbl, dy in [
-    (Q1,          f"Q1 = ${Q1:.0f} ({pct_ceros:.0f}% sin gasto)", 300),
-    (Q2,          f"Q2 = ${Q2:.0f}",   200),
-    (Q3,          f"Q3 = ${Q3:.0f}",   200),
-    (lim_sup_out, f"Bigote = ${lim_sup_out:.0f}", 200),
-]:
-    ax0.annotate(lbl, xy=(1, val), xytext=(1.35, val + dy),
-                 fontsize=8, color="#1a3a5c",
-                 arrowprops=dict(arrowstyle="->", color="#999", lw=0.8))
-ax0.annotate(f"{len(outliers)} outliers\n(> ${lim_sup_out:.0f})",
-             xy=(1, serie_gasto.max()), xytext=(1.35, serie_gasto.max() - 800),
-             fontsize=8, color="#b5651d",
-             arrowprops=dict(arrowstyle="->", color="#999", lw=0.8))
 
-# ── Panel derecho: zoom zona intercuartílica ──────────────────────────────
-ax1 = axes[1]
-ax1.boxplot(serie_gasto, vert=True, **BP_STYLE)
-ax1.set_ylim(-40, lim_sup_out + 80)   # Zoom: muestra caja + bigote superior
-ax1.set_title(f"Zoom zona intercuartílica [0 – ${lim_sup_out:.0f}]", fontsize=10, pad=4)
-ax1.set_ylabel("Gasto en Alojamiento (USD)")
-ax1.set_xticks([])
-ax1.yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f"${x:,.0f}"))
+# Líneas horizontales de referencia con etiquetas a la derecha
+# Se evitan símbolos $ dentro de cadenas de texto para compatibilidad
+# con el parser de matplotlib (trataría $ como inicio de LaTeX math mode)
+def usd(v):
+    return f"USD {v:,.2f}"
 
-# Líneas horizontales de referencia con etiquetas
+
 REFS = [
-    (Q1,          f"Q1 = ${Q1:.2f}  ({pct_ceros:.1f}% de viajes sin gasto monetario)", "#2c7bb6"),
-    (Q2,          f"Q2 (mediana) = ${Q2:.2f}",                                          "#d7191c"),
-    (Q3,          f"Q3 = ${Q3:.2f}",                                                    "#2c7bb6"),
-    (lim_sup_out, f"Bigote superior (Q3 + 1.5·IQR) = ${lim_sup_out:.2f}",              "#8B0000"),
+    (Q1, f"Q1 = {usd(Q1)}  ({pct_ceros:.1f}% de viajes sin gasto)", "#2c7bb6"),
+    (Q2, f"Q2 (mediana) = {usd(Q2)}", "#d7191c"),
+    (Q3, f"Q3 = {usd(Q3)}", "#2c7bb6"),
+    (
+        lim_sup_out,
+        f"Bigote sup. = {usd(lim_sup_out)}  ({len(outliers)} outliers por encima)",
+        "#8B0000",
+    ),
 ]
 for val, lbl, color in REFS:
-    ax1.axhline(val, color=color, linestyle="--", linewidth=0.9, alpha=0.7)
-    ax1.text(1.02, val, lbl, va="center", fontsize=7.5, color=color,
-             transform=ax1.get_yaxis_transform())
+    ax.axhline(val, color=color, linestyle="--", linewidth=1.0, alpha=0.65)
+    ax.text(
+        1.32,
+        val,
+        lbl,
+        va="center",
+        fontsize=8.5,
+        color=color,
+        transform=ax.get_yaxis_transform(),
+    )
 
-# Flecha IQR
-ax1.annotate("", xy=(0.60, Q3), xytext=(0.60, Q1),
-             xycoords=("axes fraction", "data"),
-             textcoords=("axes fraction", "data"),
-             arrowprops=dict(arrowstyle="<->", color="#555", lw=1.2))
-ax1.text(0.57, (Q1 + Q3) / 2, f"IQR\n${IQR:.2f}",
-         ha="right", va="center", fontsize=8, color="#333",
-         transform=ax1.get_yaxis_transform())
+# Flecha de doble punta para señalar el IQR
+ax.annotate(
+    "",
+    xy=(0.70, Q3),
+    xytext=(0.70, Q1),
+    xycoords=("axes fraction", "data"),
+    textcoords=("axes fraction", "data"),
+    arrowprops=dict(arrowstyle="<->", color="#444", lw=1.2),
+)
+ax.text(
+    0.67,
+    (Q1 + Q3) / 2,
+    f"IQR\n{usd(IQR)}",
+    ha="right",
+    va="center",
+    fontsize=9,
+    color="#333",
+    transform=ax.get_yaxis_transform(),
+)
 
-plt.tight_layout()
+ax.set_title(
+    f"Diagrama de Cajas — {VAR_GASTO}\n(Muestra n = {n_obs:,} — Turismo Emisivo Uruguay)",
+    fontweight="bold",
+    fontsize=12,
+    pad=10,
+)
+ax.set_ylabel("Gasto en Alojamiento (USD)")
+ax.set_xticks([])
+ax.yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f"USD {x:,.0f}"))
+fig.subplots_adjust(right=0.62)
 
 ruta_box = os.path.join(RUTA_RESULTADOS, "boxplot_gasto_alojamiento.png")
 plt.savefig(ruta_box, bbox_inches="tight")
@@ -411,9 +450,9 @@ print("\n" + "─" * 65)
 print("ÍTEM 2.7 — Diagrama de dispersión: Gente vs GastoTotal")
 print("─" * 65)
 
-gente      = df["Gente"]
-gasto_tot  = df["GastoTotal"]
-correlacion = gente.corr(gasto_tot)   # Coeficiente de correlación de Pearson
+gente = df["Gente"]
+gasto_tot = df["GastoTotal"]
+correlacion = gente.corr(gasto_tot)  # Coeficiente de correlación de Pearson
 
 # La correlación de Pearson (r) mide la fuerza y dirección de la relación
 # lineal entre dos variables. Su rango es [-1, 1]:
@@ -425,21 +464,23 @@ print(f"\n  Coeficiente de correlación de Pearson (r) = {correlacion:.4f}")
 fig, ax = plt.subplots(figsize=(9, 5))
 
 # Usamos transparencia (alpha) para ver superposición de puntos
-ax.scatter(
-    gente, gasto_tot,
-    alpha=0.35, s=18, color="#2c7bb6", edgecolors="none"
-)
+ax.scatter(gente, gasto_tot, alpha=0.35, s=18, color="#2c7bb6", edgecolors="none")
 
 # Línea de tendencia (regresión lineal) para visualizar la relación
-m, b = np.polyfit(gente, gasto_tot, 1)   # Ajuste polinomial grado 1
+m, b = np.polyfit(gente, gasto_tot, 1)  # Ajuste polinomial grado 1
 x_line = np.linspace(gente.min(), gente.max(), 200)
-ax.plot(x_line, m * x_line + b, color="#d7191c", linewidth=2,
-        label=f"Tendencia lineal (r = {correlacion:.3f})")
+ax.plot(
+    x_line,
+    m * x_line + b,
+    color="#d7191c",
+    linewidth=2,
+    label=f"Tendencia lineal (r = {correlacion:.3f})",
+)
 
 ax.set_title(
     "Diagrama de Dispersión — Gente vs Gasto Total\n"
     "(Muestra n = 2,000 — Turismo Emisivo Uruguay)",
-    fontweight="bold"
+    fontweight="bold",
 )
 ax.set_xlabel("Cantidad de personas en el grupo (Gente)")
 ax.set_ylabel("Gasto Total del grupo (USD)")
